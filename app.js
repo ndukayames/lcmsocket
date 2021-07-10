@@ -1,6 +1,12 @@
 let app = require('express')();
 let http = require('http').Server(app);
-let io = require('socket.io')(http);
+let io = require('socket.io')(server, {
+  origins: ["*"],
+  cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+  }
+})
  
 io.on('connection', (socket) => {
   console.log('connection made')
