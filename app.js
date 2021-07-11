@@ -1,23 +1,20 @@
 let app = require('express')();
-let http = require('http').Server(app);
-let io = require('socket.io')(http, {
-  origins: ["*"],
-  cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-  }
-})
+let server = require('http').createServer(app);
+let io = require('socket.io')(server);
  
 io.on('connection', (socket) => {
-  console.log('connection made')
-  socket.on('test_connection', () => {
-    console.log('test_connection')
-    io.emit('test_result', { event: 'connected'});   
+ console.log('connected')
+  socket.on('disconnect', function(){
+    console.log('user disconnected')
   });
+ socket.on('test_connection', function() {
+   console.log('test received')
+   io.emit('test_result', {result: 'test successful'})
+ })  
 });
  
 var port = process.env.PORT || 3001;
  
-http.listen(port, function(){
+server.listen(port, function(){
    console.log('listening in http://localhost:' + port);
 });
